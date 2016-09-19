@@ -1,0 +1,8 @@
+FROM umweltdk/wordpress:4.6.1
+
+ONBUILD COPY package.json /var/www/html/
+ONBUILD RUN npm install --unsafe-perm
+
+ONBUILD COPY . /var/www/html/
+ONBUILD RUN ! jq -e .scripts.build package.json > /dev/null || npm run build
+ONBUILD RUN ln -s /var/www/html/wp-config.php /usr/src/wp-config.php
